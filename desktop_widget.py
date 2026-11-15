@@ -35,7 +35,7 @@ from PySide6.QtWidgets import (  # noqa: E402
 import amlich_vn as al  # noqa: E402
 import core  # noqa: E402
 
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 IS_WIN = core.IS_WIN
 FROZEN = getattr(sys, "frozen", False)
 SCRIPT = os.path.abspath(__file__)
@@ -214,7 +214,7 @@ def build_qss(th):
     acc_txt = "#000000" if lum(acc) > 150 else "#ffffff"
     ind = max(11, int(13 * s))
     return f"""
-QWidget#content {{ color: {C(t)}; font-family: "Segoe UI", "Arial"; font-size: {pt(10)}; }}
+QWidget#content {{ background: transparent; color: {C(t)}; font-family: "Segoe UI", "Arial"; font-size: {pt(10)}; }}
 QLabel {{ color: {C(t)}; background: transparent; font-size: {pt(10)}; }}
 QLabel[sub="true"] {{ color: {C(t, .64)}; font-size: {pt(9)}; }}
 QLabel#section {{ color: {C(t, .55)}; font-size: {pt(8)}; font-weight: 700; }}
@@ -857,6 +857,7 @@ class TasksSection(Section):
         self.scroll.viewport().setAutoFillBackground(False)
         host.setAutoFillBackground(False)
         self.scroll.setMinimumHeight(60)
+        self.scroll.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Ignored)   # co trước khi phải cuộn
         self.v.addWidget(self.scroll, 1)
         self._new_due = None
         self.rebuild()
@@ -1001,6 +1002,7 @@ class NotesSection(Section):
         self.ed = QPlainTextEdit()
         self.ed.setPlaceholderText("Viết ghi chú… (tự động lưu)")
         self.ed.setMinimumHeight(70)
+        self.ed.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Ignored)
         self.ed.textChanged.connect(self.on_text)
         self.v.addWidget(self.ed, 1)
         for n in self.notes:
@@ -1400,13 +1402,13 @@ class DesktopWidget(QWidget):
         outer.setContentsMargins(0, 0, 0, 0)
         self.content = QWidget()
         self.content.setObjectName("content")
-        self.content.setAutoFillBackground(False)
         self.scroller = QScrollArea()                 # màn hình thấp: cuộn thay vì bóp méo nội dung
         self.scroller.setObjectName("outerScroll")
         self.scroller.setWidgetResizable(True)
         self.scroller.setFrameShape(QFrame.Shape.NoFrame)
         self.scroller.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroller.setWidget(self.content)
+        self.content.setAutoFillBackground(False)      # setWidget() bật lại tô nền -> phải tắt SAU đó
         self.scroller.viewport().setAutoFillBackground(False)
         outer.addWidget(self.scroller)
         lay = QVBoxLayout(self.content)
@@ -1928,7 +1930,12 @@ def run_selftest(app, w, out):
         w.apply_weather(core.parse_weather(sample_weather()))
         for _ in range(20):
             app.processEvents()
-        w.grab().save(os.path.join(out, "widget-dark.png"))
+        shot = w.grab()
+        shot.save(os.path.join(out, "widget-dark.png"))
+        img = shot.toImage()
+        for yy in (img.height() // 3, img.height() // 2, img.height() - 30):
+            a = img.pixelColor(6, yy).alpha()
+            assert a < 250, f"nền phải trong suốt một phần (alpha={a} tại y={yy})"
         w.content.grab().save(os.path.join(out, "widget-dark-full.png"))
         with open(os.path.join(out, "layout.txt"), "w", encoding="utf-8") as f:
             f.write(f"window {w.width()}x{w.height()} | content {w.content.width()}x{w.content.height()} | "
