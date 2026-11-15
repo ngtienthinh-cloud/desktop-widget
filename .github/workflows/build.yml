@@ -1,0 +1,92 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore: [ "**.md" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        shell: bash
+    env:
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          set -o pipefail
+          mkdir -p ci-out
+          python -m pip install --upgrade pip > /dev/null
+          pip install -r requirements.txt pyinstaller pillow 2>&1 | tee ci-out/pip.log | tail -n 5
+          python -c "import PySide6, PyInstaller, sys; print('Python', sys.version.split()[0], '| PySide6', PySide6.__version__, '| PyInstaller', PyInstaller.__version__)" | tee ci-out/versions.txt
+
+      - name: Unit tests (lunar calendar, core)
+        run: |
+          set -o pipefail
+          python tests_core.py 2>&1 | tee ci-out/tests_core.log
+
+      - name: GUI self-test (offscreen)
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          set -o pipefail
+          python desktop_widget.py --selftest ci-out/offscreen 2>&1 | tee ci-out/selftest-offscreen.log
+
+      - name: GUI self-test (real Windows desktop)
+        continue-on-error: true
+        timeout-minutes: 5
+        run: |
+          set -o pipefail
+          python desktop_widget.py --selftest ci-out/native 2>&1 | tee ci-out/selftest-native.log
+
+      - name: Build icon and EXE
+        run: |
+          set -o pipefail
+          python make_icon.py assets/icon.ico
+          pyinstaller --noconfirm --clean --onefile --windowed --name DesktopWidget --icon assets/icon.ico desktop_widget.py 2>&1 | tee ci-out/pyinstaller.log | tail -n 15
+          ls -la dist | tee ci-out/dist.txt
+
+      - name: Self-test the built EXE
+        shell: pwsh
+        timeout-minutes: 5
+        run: |
+          $out = Join-Path $PWD "ci-out\exe"
+          $p = Start-Process -FilePath "dist\DesktopWidget.exe" -ArgumentList "--selftest", $out -Wait -PassThru
+          "exit code: $($p.ExitCode)" | Tee-Object -FilePath "ci-out\exe-exitcode.txt"
+          if (Test-Path (Join-Path $out "result.txt")) { Get-Content (Join-Path $out "result.txt") -Encoding utf8 }
+          if ($p.ExitCode -ne 0) { exit 1 }
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Desktop Widget v1.0.${{ github.run_number }}
+          body: |
+            Tải **DesktopWidget.exe** ở mục Assets bên dưới rồi nhấp đúp để chạy.
+            Không cần cài Python hay thư viện nào. Lần đầu chạy, chọn "Cài đặt" để app tự chạy cùng Windows.
+          files: dist/DesktopWidget.exe
+
+      - name: Upload CI report (branch ci-report)
+        if: always()
+        run: |
+          mkdir -p ci-out
+          echo "run ${{ github.run_number }}: ${{ job.status }}" > ci-out/STATUS.txt
+          cd ci-out
+          git init -q
+          git checkout -q -b ci-report
+          git add -A
+          git -c user.name="ci" -c user.email="ci@users.noreply.github.com" commit -qm "CI report run ${{ github.run_number }}"
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" ci-report
