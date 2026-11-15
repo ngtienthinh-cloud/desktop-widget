@@ -1,0 +1,38 @@
+OK   Tết 1985 
+OK   Tết 2007 
+OK   Tết 2024 
+OK   Tết 2025 
+OK   Tết 2026 
+OK   Tết 2027 
+OK   tháng 6 nhuận 2025 
+OK   tháng 2 nhuận 2023 
+OK   khứ hồi âm-dương 1990-2050 
+OK   Giao thừa 2027 
+OK   Trung thu 2026 
+OK   merge: giới hạn opacity 
+OK   merge: z_mode sai -> desktop 
+OK   merge: lat chuỗi -> số 
+OK   merge: bỏ khóa lạ 
+OK   merge: dữ liệu hỏng 
+OK   normalize: lọc việc rỗng 
+OK   normalize: ghi chú mặc định 
+OK   save/load 
+OK   tệp hỏng -> mặc định 
+OK   tệp hỏng được giữ lại 
+OK   hạn quá 
+OK   hạn hôm nay 
+OK   hạn mai 
+OK   hạn xa 
+OK   sắp xếp việc 
+OK   url thời tiết 
+OK   url có timezone 
+OK   url geocode có dấu 
+OK   bỏ dấu 
+OK   parse: nhiệt độ 
+OK   parse: mô tả + ban đêm 
+OK   parse: ngày 2 thiếu mưa 
+OK   parse: giờ mặt trời 
+OK   mã thời tiết lạ 
+OK   parse lỗi -> ValueError 
+
+KẾT QUẢ: TẤT CẢ ĐẠT

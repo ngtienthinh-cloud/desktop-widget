@@ -1,0 +1,71 @@
+344 INFO: PyInstaller: 6.22.3, contrib hooks: 2026.10
+344 INFO: Python: 3.12.10
+367 INFO: Platform: Windows-2025Server-10.0.26100-SP0
+367 INFO: Python environment: C:\hostedtoolcache\windows\Python\3.12.10\x64
+367 INFO: wrote D:\a\desktop-widget\desktop-widget\DesktopWidget.spec
+375 INFO: Removing temporary files and cleaning cache in C:\Users\runneradmin\AppData\Local\pyinstaller
+375 INFO: Module search paths (PYTHONPATH):
+['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Scripts\\pyinstaller.exe',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.zip',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\DLLs',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages',
+ 'D:\\a\\desktop-widget\\desktop-widget']
+614 INFO: checking Analysis
+614 INFO: Building Analysis because Analysis-00.toc is non existent
+614 INFO: Looking for Python shared library...
+614 INFO: Using Python shared library: C:\hostedtoolcache\windows\Python\3.12.10\x64\python312.dll
+614 INFO: Running Analysis Analysis-00.toc
+614 INFO: Target bytecode optimization level: 0
+614 INFO: Initializing module dependency graph...
+624 INFO: Initializing module graph hook caches...
+639 INFO: Analyzing modules for base_library.zip ...
+1342 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2083 INFO: Processing standard module hook 'hook-math.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+3146 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+4042 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+4605 INFO: Caching module dependency graph...
+4642 INFO: Analyzing D:\a\desktop-widget\desktop-widget\desktop_widget.py
+4897 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+4915 INFO: Processing standard module hook 'hook-_ctypes.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5208 INFO: Processing standard module hook 'hook-PySide6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5370 INFO: Processing standard module hook 'hook-shiboken6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5524 INFO: Processing standard module hook 'hook-PySide6.QtNetwork.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+8211 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+11841 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+27791 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+30638 INFO: Processing module hooks (post-graph stage)...
+30646 INFO: Performing binary vs. data reclassification (123 entries)
+30671 INFO: Looking for ctypes DLLs
+30707 INFO: Analyzing run-time hooks ...
+30709 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+30711 INFO: Including run-time hook 'pyi_rth_pyside6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+30713 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+30715 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+30720 INFO: Creating base_library.zip...
+30744 INFO: Looking for dynamic libraries
+30935 INFO: Extra DLL search directories (AddDllDirectory): ['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\shiboken6']
+30935 INFO: Extra DLL search directories (PATH): ['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PySide6']
+32248 INFO: Warnings written to D:\a\desktop-widget\desktop-widget\build\DesktopWidget\warn-DesktopWidget.txt
+32265 INFO: Graph cross-reference written to D:\a\desktop-widget\desktop-widget\build\DesktopWidget\xref-DesktopWidget.html
+32285 INFO: checking PYZ
+32285 INFO: Building PYZ because PYZ-00.toc is non existent
+32285 INFO: Building PYZ (ZlibArchive) D:\a\desktop-widget\desktop-widget\build\DesktopWidget\PYZ-00.pyz
+32472 INFO: Building PYZ (ZlibArchive) D:\a\desktop-widget\desktop-widget\build\DesktopWidget\PYZ-00.pyz completed successfully.
+32486 INFO: checking PKG
+32487 INFO: Building PKG because PKG-00.toc is non existent
+32487 INFO: Building PKG (CArchive) DesktopWidget.pkg
+45779 INFO: Building PKG (CArchive) DesktopWidget.pkg completed successfully.
+45785 INFO: Bootloader C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+45785 INFO: checking EXE
+45785 INFO: Building EXE because EXE-00.toc is non existent
+45785 INFO: Building EXE from EXE-00.toc
+45785 INFO: Copying bootloader EXE to D:\a\desktop-widget\desktop-widget\dist\DesktopWidget.exe
+45787 INFO: Copying icon to EXE
+45789 INFO: Copying 0 resources to EXE
+45789 INFO: Embedding manifest in EXE
+45791 INFO: Appending PKG archive to EXE
+45813 INFO: Fixing EXE headers
+46032 INFO: Building EXE from EXE-00.toc completed successfully.
+46039 INFO: Build complete! The results are available in: D:\a\desktop-widget\desktop-widget\dist

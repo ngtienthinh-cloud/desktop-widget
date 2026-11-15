@@ -1,0 +1,4 @@
+total 40216
+drwxr-xr-x 1 runneradmin 197121        0 Nov 15 08:56 .
+drwxr-xr-x 1 runneradmin 197121        0 Nov 15 08:56 ..
+-rwxr-xr-x 1 runneradmin 197121 41173593 Nov 15 08:56 DesktopWidget.exe

@@ -1,0 +1,1 @@
+window 340x760 | content 575x760 | content min 759 | scale 90 | screen 800
