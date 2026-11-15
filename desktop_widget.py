@@ -35,7 +35,7 @@ from PySide6.QtWidgets import (  # noqa: E402
 import amlich_vn as al  # noqa: E402
 import core  # noqa: E402
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 IS_WIN = core.IS_WIN
 FROZEN = getattr(sys, "frozen", False)
 SCRIPT = os.path.abspath(__file__)
@@ -218,7 +218,7 @@ QWidget#content {{ color: {C(t)}; font-family: "Segoe UI", "Arial"; font-size: {
 QLabel {{ color: {C(t)}; background: transparent; font-size: {pt(10)}; }}
 QLabel[sub="true"] {{ color: {C(t, .64)}; font-size: {pt(9)}; }}
 QLabel#section {{ color: {C(t, .55)}; font-size: {pt(8)}; font-weight: 700; }}
-QLabel#clock {{ font-size: {pt(36)}; font-weight: 300; }}
+QLabel#clock {{ font-size: {pt(34)}; font-weight: 300; }}
 QLabel#clockSec {{ color: {C(t, .55)}; font-size: {pt(14)}; font-weight: 300; }}
 QLabel#date {{ font-size: {pt(12)}; font-weight: 600; }}
 QLabel#lunar {{ color: {C(acc)}; font-size: {pt(10.5)}; font-weight: 600; }}
@@ -270,6 +270,19 @@ QMenu {{ background: {C(menu_bg)}; color: {C(t)}; border: 1px solid {C(t, .2)}; 
 QMenu::item {{ padding: 5px 20px 5px 12px; border-radius: 4px; }}
 QMenu::item:selected {{ background: {C(acc)}; color: {acc_txt}; }}
 QMenu::separator {{ height: 1px; background: {C(t, .15)}; margin: 4px 6px; }}
+"""
+
+
+def build_outer_qss(th):
+    C = qss_color
+    t = th.text
+    return f"""
+QScrollArea#outerScroll {{ background: transparent; border: none; }}
+QScrollArea#outerScroll > QWidget#qt_scrollarea_viewport {{ background: transparent; }}
+QScrollArea#outerScroll > QScrollBar:vertical {{ background: transparent; width: 6px; margin: 10px 2px 18px 0px; }}
+QScrollArea#outerScroll > QScrollBar::handle:vertical {{ background: {C(t, .25)}; border-radius: 3px; min-height: 30px; }}
+QScrollArea#outerScroll > QScrollBar::add-line:vertical, QScrollArea#outerScroll > QScrollBar::sub-line:vertical {{ height: 0px; }}
+QScrollArea#outerScroll > QScrollBar::add-page:vertical, QScrollArea#outerScroll > QScrollBar::sub-page:vertical {{ background: none; }}
 """
 
 
@@ -566,8 +579,8 @@ class MonthCalendar(QWidget):
 
     def update_metrics(self):
         s = self.app.theme.s()
-        self.head_h = int(round(18 * s))
-        self.cell_h = int(round(32 * s))
+        self.head_h = int(round(17 * s))
+        self.cell_h = int(round(30 * s))
         self.setFixedHeight(self.head_h + 6 * self.cell_h + 2)
         self.update()
 
@@ -728,7 +741,7 @@ class CalendarSection(Section):
 
     def update_title(self):
         _, _, ly, _ = al.solar_to_lunar(15, self.cal.month, self.cal.year)
-        self.title.setText(f"Tháng {self.cal.month} / {self.cal.year}  ·  {al.can_chi_nam(ly)}")
+        self.title.setText(f"Tháng {self.cal.month}/{self.cal.year} · {al.can_chi_nam(ly)}")
 
     def show_day(self, d):
         if d is None:
@@ -1371,6 +1384,12 @@ class DesktopWidget(QWidget):
         self._fetching = False
         self._fetch_loc = None
 
+        if self.cfg.get("x") is None:                 # lần đầu chạy: màn hình thấp thì thu gọn
+            avail_h = QGuiApplication.primaryScreen().availableGeometry().height()
+            if avail_h < 900 and self.cfg.get("scale", 100) == 100:
+                self.cfg["scale"] = 90
+                self.cfg["show_gio_hd"] = False
+
         self.setWindowTitle(core.APP_TITLE)
         self.setWindowFlags(self.window_flags())
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
@@ -1381,7 +1400,15 @@ class DesktopWidget(QWidget):
         outer.setContentsMargins(0, 0, 0, 0)
         self.content = QWidget()
         self.content.setObjectName("content")
-        outer.addWidget(self.content)
+        self.content.setAutoFillBackground(False)
+        self.scroller = QScrollArea()                 # màn hình thấp: cuộn thay vì bóp méo nội dung
+        self.scroller.setObjectName("outerScroll")
+        self.scroller.setWidgetResizable(True)
+        self.scroller.setFrameShape(QFrame.Shape.NoFrame)
+        self.scroller.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scroller.setWidget(self.content)
+        self.scroller.viewport().setAutoFillBackground(False)
+        outer.addWidget(self.scroller)
         lay = QVBoxLayout(self.content)
         lay.setContentsMargins(16, 14, 16, 14)
         lay.setSpacing(9)
@@ -1648,6 +1675,7 @@ class DesktopWidget(QWidget):
         self.schedule_save()
 
     def apply_theme(self):
+        self.scroller.setStyleSheet(build_outer_qss(self.theme))
         self.content.setStyleSheet(build_qss(self.theme))
         self.calendar.cal.update_metrics()
         self.update_icon()
@@ -1901,6 +1929,11 @@ def run_selftest(app, w, out):
         for _ in range(20):
             app.processEvents()
         w.grab().save(os.path.join(out, "widget-dark.png"))
+        w.content.grab().save(os.path.join(out, "widget-dark-full.png"))
+        with open(os.path.join(out, "layout.txt"), "w", encoding="utf-8") as f:
+            f.write(f"window {w.width()}x{w.height()} | content {w.content.width()}x{w.content.height()} | "
+                    f"content min {w.content.minimumSizeHint().height()} | scale {w.cfg['scale']} | "
+                    f"screen {QGuiApplication.primaryScreen().availableGeometry().height()}\n")
         cal = w.calendar.cal
         cal.shift(1)
         cal.shift(-14)
